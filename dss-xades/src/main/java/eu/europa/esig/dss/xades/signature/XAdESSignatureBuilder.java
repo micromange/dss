@@ -132,13 +132,6 @@ public abstract class XAdESSignatureBuilder extends XAdESBuilder implements Sign
 	/** Cached UnsignedSignatureProperties element */
 	protected Element unsignedSignaturePropertiesDom;
 
-	/** Id-prefix for KeyInfo element */
-	protected static final String KEYINFO_PREFIX = "keyInfo-";
-	/** Id-prefix for SignatureValue element */
-	protected static final String VALUE_PREFIX = "value-";
-	/** Id-prefix for Signature element */
-	protected static final String XADES_PREFIX = "xades-";
-
 	/**
 	 * Creates the signature according to the packaging
 	 *
@@ -520,7 +513,7 @@ public abstract class XAdESSignatureBuilder extends XAdESBuilder implements Sign
 		final Element keyInfoElement = DomUtils.createElementNS(documentDom, getXmldsigNamespace(), XMLDSigElement.KEY_INFO);
 		signatureDom.appendChild(keyInfoElement);
 		if (params.isSignKeyInfo()) {
-			keyInfoElement.setAttribute(XMLDSigAttribute.ID.getAttributeName(), KEYINFO_PREFIX + deterministicId);
+			keyInfoElement.setAttribute(XMLDSigAttribute.ID.getAttributeName(), params.getPrefixes().getKeyInfo() + deterministicId);
 		}
 		List<CertificateToken> certificates = new BaselineBCertificateSelector(params.getSigningCertificate(), params.getCertificateChain())
 				.setTrustedCertificateSource(certificateVerifier.getTrustedCertSources())
@@ -731,7 +724,7 @@ public abstract class XAdESSignatureBuilder extends XAdESBuilder implements Sign
 		final Element reference = DomUtils.createElementNS(documentDom, getXmldsigNamespace(), XMLDSigElement.REFERENCE);
 		signedInfoDom.appendChild(reference);	
 		reference.setAttribute(XMLDSigAttribute.TYPE.getAttributeName(), xadesPath.getSignedPropertiesUri());
-		reference.setAttribute(XMLDSigAttribute.URI.getAttributeName(), DomUtils.toElementReference(XADES_PREFIX + deterministicId));
+		reference.setAttribute(XMLDSigAttribute.URI.getAttributeName(), DomUtils.toElementReference(params.getPrefixes().getXades() + deterministicId));
 
 		final Element transforms = DomUtils.createElementNS(documentDom, getXmldsigNamespace(), XMLDSigElement.TRANSFORMS);
 		reference.appendChild(transforms);
@@ -779,7 +772,7 @@ public abstract class XAdESSignatureBuilder extends XAdESBuilder implements Sign
 		
 		final Element reference = DomUtils.createElementNS(documentDom, getXmldsigNamespace(), XMLDSigElement.REFERENCE);
 		signedInfoDom.appendChild(reference);		
-		reference.setAttribute(XMLDSigAttribute.URI.getAttributeName(), DomUtils.toElementReference(KEYINFO_PREFIX + deterministicId));
+		reference.setAttribute(XMLDSigAttribute.URI.getAttributeName(), DomUtils.toElementReference(params.getPrefixes().getKeyInfo() + deterministicId));
 		
 		final Element transforms = DomUtils.createElementNS(documentDom, getXmldsigNamespace(), XMLDSigElement.TRANSFORMS);
 		reference.appendChild(transforms);
@@ -821,7 +814,7 @@ public abstract class XAdESSignatureBuilder extends XAdESBuilder implements Sign
 	protected void incorporateSignatureValue() {
 		signatureValueDom = DomUtils.createElementNS(documentDom, getXmldsigNamespace(), XMLDSigElement.SIGNATURE_VALUE);
 		signatureDom.appendChild(signatureValueDom);		
-		signatureValueDom.setAttribute(XMLDSigAttribute.ID.getAttributeName(), VALUE_PREFIX + deterministicId);
+		signatureValueDom.setAttribute(XMLDSigAttribute.ID.getAttributeName(), params.getPrefixes().getValue() + deterministicId);
 	}
 
 	/**
@@ -835,7 +828,7 @@ public abstract class XAdESSignatureBuilder extends XAdESBuilder implements Sign
 	 */
 	protected void incorporateSignedProperties() {
 		signedPropertiesDom = DomUtils.addElement(documentDom, qualifyingPropertiesDom, getXadesNamespace(), getCurrentXAdESElements().getElementSignedProperties());
-		signedPropertiesDom.setAttribute(XMLDSigAttribute.ID.getAttributeName(), XADES_PREFIX + deterministicId);
+		signedPropertiesDom.setAttribute(XMLDSigAttribute.ID.getAttributeName(), params.getPrefixes().getXades() + deterministicId);
 
 		incorporateSignedSignatureProperties();
 
@@ -1623,9 +1616,9 @@ public abstract class XAdESSignatureBuilder extends XAdESBuilder implements Sign
 		timestampElement.appendChild(encapsulatedTimestampElement);
 
 		// Build Id after time-stamp incorporation to ensure {@code timestampElement} contains a new time-stamp
-		final String timestampId = TIMESTAMP_PREFIX + toXmlIdentifier(XAdESAttributeIdentifier.build(timestampElement));
+		final String timestampId = params.getPrefixes().getTimestamp() + toXmlIdentifier(XAdESAttributeIdentifier.build(timestampElement));
 		timestampElement.setAttribute(XMLDSigAttribute.ID.getAttributeName(), timestampId);
-		encapsulatedTimestampElement.setAttribute(XMLDSigAttribute.ID.getAttributeName(), ENCAPSULATED_TIMESTAMP_PREFIX + timestampId);
+		encapsulatedTimestampElement.setAttribute(XMLDSigAttribute.ID.getAttributeName(), params.getPrefixes().getEncapsulatedTimestamp() + timestampId);
 	}
 
 	/**

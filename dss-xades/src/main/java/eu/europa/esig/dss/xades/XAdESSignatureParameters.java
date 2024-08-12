@@ -178,7 +178,12 @@ public class XAdESSignatureParameters extends AbstractSignatureParameters<XAdEST
 	 */
 	private List<DSSDataObjectFormat> dataObjectFormatList;
 
-	/**
+  /**
+   * Contains all id prefixes used in the signature
+   */
+  private XAdESIdPrefixes xAdESIdPrefixes = XAdESIdPrefixes.newBuilder().build();
+
+  /**
 	 * Default constructor instantiating object with null values
 	 */
 	public XAdESSignatureParameters() {
@@ -653,6 +658,24 @@ public class XAdESSignatureParameters extends AbstractSignatureParameters<XAdEST
 	public void setDataObjectFormatList(List<DSSDataObjectFormat> dataObjectFormatList) {
 		this.dataObjectFormatList = dataObjectFormatList;
 	}
+
+  /**
+   * Retrieves the id prefixes.
+   *
+   * @return  the id prefixes
+   */
+  public XAdESIdPrefixes getPrefixes() {
+    return this.xAdESIdPrefixes;
+  }
+
+  /**
+   * Sets the prefixes for all id:s in the signature.
+   *
+   * @param idPrefixes the prefix definitions
+   */
+  public void setPrefixes(XAdESIdPrefixes idPrefixes) {
+    this.xAdESIdPrefixes = idPrefixes;
+  }
 
 	@Override
 	public XAdESTimestampParameters getContentTimestampParameters() {

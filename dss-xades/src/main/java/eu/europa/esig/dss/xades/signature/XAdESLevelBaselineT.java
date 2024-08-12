@@ -498,7 +498,7 @@ public class XAdESLevelBaselineT extends ExtensionBuilder implements SignatureEx
 				id = timestampToken.getDSSIdAsString();
 			}
 
-			timeStampValidationDataDom.setAttribute("Id", ID_PREFIX + id);
+			timeStampValidationDataDom.setAttribute("Id", params.getPrefixes().getId() + id);
 			if (params.isPrettyPrint()) {
 				DSSXMLUtils.indentAndReplace(documentDom, timeStampValidationDataDom);
 			}
@@ -599,8 +599,8 @@ public class XAdESLevelBaselineT extends ExtensionBuilder implements SignatureEx
 		if (!XAdESNamespace.XADES_111.isSameUri(getXadesNamespace().getUri())) {
 			// Add Id after the element is constructed
 			final String timestampId = toXmlIdentifier(XAdESAttributeIdentifier.build(timeStampDom));
-			timeStampDom.setAttribute(XMLDSigAttribute.ID.getAttributeName(), TIMESTAMP_PREFIX + timestampId);
-			encapsulatedTimeStampDom.setAttribute(XMLDSigAttribute.ID.getAttributeName(), ENCAPSULATED_TIMESTAMP_PREFIX + timestampId);
+			timeStampDom.setAttribute(XMLDSigAttribute.ID.getAttributeName(), params.getPrefixes().getTimestamp() + timestampId);
+			encapsulatedTimeStampDom.setAttribute(XMLDSigAttribute.ID.getAttributeName(), params.getPrefixes().getEncapsulatedTimestamp() + timestampId);
 		}
 	}
 
