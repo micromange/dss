@@ -76,15 +76,6 @@ public abstract class XAdESBuilder {
 	/** The URI attribute */
 	public static final String URI = "URI";
 
-	/** Xml Id prefix */
-	protected static final String ID_PREFIX = "id-";
-
-	/** Id-prefix for TimeStamp element */
-	protected static final String TIMESTAMP_PREFIX = "ts-";
-
-	/** Id-prefix for EncapsulatedTimeStamp element */
-	protected static final String ENCAPSULATED_TIMESTAMP_PREFIX = "ets-";
-
 	/**
 	 * This variable holds the {@code XAdESPaths} which contains all constants and
 	 * queries needed to cope with the default signature schema.
@@ -268,12 +259,12 @@ public abstract class XAdESBuilder {
 	protected void incorporateIssuerV1(final Element parentDom, final CertificateToken certificate) {
 		final Element issuerSerialDom = DomUtils.addElement(documentDom, parentDom, getXadesNamespace(), getCurrentXAdESElements().getElementIssuerSerial());
 		final Element x509IssuerNameDom = DomUtils.addElement(documentDom, issuerSerialDom, getXmldsigNamespace(), XMLDSigElement.X509_ISSUER_NAME);
-				
+
 		final String issuerX500PrincipalName = certificate.getIssuerX500Principal().getName();
 		DomUtils.setTextNode(documentDom, x509IssuerNameDom, issuerX500PrincipalName);
 
 		final Element x509SerialNumberDom = DomUtils.addElement(documentDom, issuerSerialDom, getXmldsigNamespace(), XMLDSigElement.X509_SERIAL_NUMBER);
-		
+
 		final BigInteger serialNumber = certificate.getSerialNumber();
 		final String serialNumberString = serialNumber.toString();
 		DomUtils.setTextNode(documentDom, x509SerialNumberDom, serialNumberString);
@@ -448,7 +439,7 @@ public abstract class XAdESBuilder {
 	 * @return {@link String}
 	 */
 	protected String toXmlIdentifier(Identifier identifier) {
-		return ID_PREFIX + DSSUtils.getSHA1Digest(identifier.asXmlId());
+		return params.getPrefixes().getId() + DSSUtils.getSHA1Digest(identifier.asXmlId());
 	}
 	
 }
